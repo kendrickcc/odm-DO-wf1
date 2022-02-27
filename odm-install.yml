@@ -1,0 +1,88 @@
+- become: yes
+  hosts: all
+  name: odm-install
+  tasks:
+    - name: Wait for apt to unlock
+      become: yes
+      shell:  while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+      
+    - name: Install docker
+      apt:
+        name: docker
+        update_cache: yes
+        state: latest
+
+    - name: Install docker-compose
+      apt:
+        name: docker-compose
+        update_cache: yes
+        state: latest
+      
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        update_cache: yes
+        state: latest
+
+    - name: Add the user 'odm' and add it to sudo and docker
+      user:
+        name: odm
+        groups: sudo,docker
+
+    - name: Add SSH key to 'odm'
+      authorized_key:
+        user: odm
+        state: present
+        key: "{{ lookup('file', pub_key) }}"
+
+    - name: Get webodm.service
+      get_url:
+        url: https://raw.githubusercontent.com/kendrickcc/ODM/main/webodm.service
+        dest: /etc/systemd/system/webodm.service
+
+    - name: webodm.service file permission
+      file:
+        path: /etc/systemd/system/webodm.service
+        owner: odm
+        group: odm
+
+    - name: create WebODM directory for repo
+      file: 
+        path: /webodm
+        state: directory
+        owner: odm
+        group: odm
+        recurse: yes
+
+    - name: create ODM data directory
+      file: 
+        path: /odmdata
+        state: directory
+        owner: odm
+        group: odm
+
+    - name: Clone ODM
+      ansible.builtin.command: "git clone https://github.com/OpenDroneMap/WebODM --config core.autocrlf=input --depth 1"
+      become: yes
+      become_user: odm
+      args:
+        chdir: /webodm
+
+    - name: Docker compose pull and create ODM containers
+      ansible.builtin.command: "docker-compose -f docker-compose.yml -f docker-compose.nodeodm.yml up --no-start"
+      become: yes
+      become_user: odm
+      args:
+        chdir: /webodm/WebODM
+
+    - name: Service webodm enable and start
+      ansible.builtin.systemd:
+        name: webodm.service
+        state: started
+        enabled: yes
+
+#    - name: webodm-nginx enable and start
+#      ansible.builtin.systemd:
+#        name: /webodm/WebODM/service/webodm-nginx.service
+#        state: started
+#        enabled: yes
