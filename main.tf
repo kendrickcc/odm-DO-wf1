@@ -23,13 +23,14 @@ provider "digitalocean" {
 # Comment out this section if testing locally and do not want to use the S3 bucket
 # Remove the leading # to disable the backend
 #-------------------------------
-#/* Begin comment block - only need to remove the leading "#"
+/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
-    key      = "state/terraform.tfstate"
+    key      = "terraform.tfstate"
     bucket   = "20220226tfstate"
     region   = "nyc3"
     endpoint = "nyc3.digitaloceanspaces.com"
+    skip_requesting_account_id  = true
     skip_region_validation      = true
     skip_credentials_validation = true
     skip_metadata_api_check     = true
