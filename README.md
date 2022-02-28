@@ -13,6 +13,7 @@ https://www.digitalocean.com/community/tutorials/how-to-protect-sensitive-data-i
 https://20220226tfstate.nyc3.digitaloceanspaces.com
 
 Create Spaces access keys and enter them into GitHub
-SPACE_ACCESS_KEY
-SPACE_SECRET_KEY
+SPACES_ACCESS_KEY_ID 6B72OLWXN4EDA2YQ7SHD
+SPACES_SECRET_ACCESS_KEY Ebu8+n887OfvtOsFIT6rS5ZilH4WzN0QRlkc4mvvUAY
 
+https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs
