@@ -19,11 +19,10 @@ provider "digitalocean" {
 #/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
-    key      = "terraform.tfstate"
-    bucket   = "20220226tfstate"
-    region   = "nyc3"
-    endpoint = "nyc3.digitaloceanspaces.com"
-    skip_requesting_account_id  = true
+    key                         = "terraform.tfstate"
+    bucket                      = "20220226tfstate"
+    region                      = "nyc3"
+    endpoint                    = "nyc3.digitaloceanspaces.com"
     skip_region_validation      = true
     skip_credentials_validation = true
     skip_metadata_api_check     = true
@@ -46,17 +45,17 @@ data "template_file" "user_data" {
   template = file("odmSetup.yaml")
 }
 resource "digitalocean_droplet" "odm" {
-  count  = 1
-  image  = "ubuntu-18-04-x64"
-  name   = "odm-${count.index}"
-  region = "nyc1"
-  size   = "s-1vcpu-1gb"
+  count     = 1
+  image     = "ubuntu-18-04-x64"
+  name      = "odm-${count.index}"
+  region    = "nyc1"
+  size      = "s-1vcpu-1gb"
   user_data = data.template_file.user_data.rendered
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
 
-/*
+  /*
   provisioner "remote-exec" {
     inline = ["sudo apt-get update", 
       "sudo apt-get upgrade -y", 
@@ -95,8 +94,8 @@ resource "digitalocean_firewall" "odm" {
   }
 
   outbound_rule {
-    protocol = "tcp"
-    port_range = "1-65535"
+    protocol              = "tcp"
+    port_range            = "1-65535"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 
