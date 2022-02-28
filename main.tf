@@ -10,6 +10,7 @@ terraform {
   }
 }
 provider "digitalocean" {
+  region = "nyc1"
   default_tags {
     tags = {
       Name    = var.repo_name # Important to use capital "N" for Name as this will automatically display in the consoles default tag
