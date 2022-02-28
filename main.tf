@@ -33,6 +33,7 @@ terraform {
 data "digitalocean_ssh_key" "terraform" {
   name = var.pub_key
 }
+/*
 resource "digitalocean_project" "odm" {
   name        = "OpenDroneMap"
   description = "OpenDroneMap"
@@ -40,6 +41,7 @@ resource "digitalocean_project" "odm" {
   environment = "Development"
   resources   = [digitalocean_droplet.odm.urn]
 }
+*/
 data "template_file" "user_data" {
   template = file("odmSetup.yaml")
 }
@@ -83,13 +85,13 @@ resource "digitalocean_firewall" "odm" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
-    source_addresses = ["${chomp(data.http.icanhazip.body)}/32"]
+    source_addresses = ["0.0.0.0/0"]
   }
 
   inbound_rule {
     protocol         = "tcp"
     port_range       = "8000"
-    source_addresses = ["${chomp(data.http.icanhazip.body)}/32"]
+    source_addresses = ["0.0.0.0/0"]
   }
 
   outbound_rule {
