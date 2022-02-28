@@ -1,20 +1,53 @@
+#-------------------------------
+# DigitalOcean Provider
+#-------------------------------
 terraform {
   required_providers {
     digitalocean = {
       source  = "digitalocean/digitalocean"
-      version = "1.22.2"
+      version = "~> 2.0"
     }
   }
 }
-provider "digitalocean" {}
+provider "digitalocean" {
+  default_tags {
+    tags = {
+      Name    = var.repo_name # Important to use capital "N" for Name as this will automatically display in the consoles default tag
+      Owner   = var.repo_owner
+      Project = var.project
+    }
+  }
+}
+#-------------------------------
+# S3 Remote State
+# Comment out this section if testing locally and do not want to use the S3 bucket
+# Remove the leading # to disable the backend
+#-------------------------------
+#/* Begin comment block - only need to remove the leading "#"
+terraform {
+  backend "s3" {
+    key      = "state/terraform.tfstate"
+    bucket   = "20220226tfstate"
+    region   = "nyc3"
+    endpoint = "nyc3.digitaloceanspaces.com"
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+  }
+}
+#End of comment block */
 data "digitalocean_ssh_key" "terraform" {
   name = var.pub_key
 }
-data "http" "icanhazip" {
-  url = "http://icanhazip.com"
+resource "digitalocean_project" "odm" {
+  name        = "OpenDroneMap"
+  description = "OpenDroneMap"
+  purpose     = "Web Application"
+  environment = "Development"
+  resources   = [digitalocean_droplet.odm.urn]
 }
 data "template_file" "user_data" {
-  template = file("../cloud-init/odmSetup.yaml")
+  template = file("odmSetup.yaml")
 }
 resource "digitalocean_droplet" "odm" {
   count  = 1
