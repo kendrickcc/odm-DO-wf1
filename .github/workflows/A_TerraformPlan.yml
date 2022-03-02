@@ -16,7 +16,7 @@ jobs:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
         SPACE_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY_ID}}
         SPACE_SECRET_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
-      run: terraform init -input=false
+      run: terraform init -input=false -backend-config="access_key="${{ secrets.SPACES_ACCESS_KEY_ID}} -backend-config="secret_key="${{ secrets.SPACES_SECRET_ACCESS_KEY}} -backend-config="bucket=20220226tfstate"
 
     - name: Terraform validation
       run: terraform validate
