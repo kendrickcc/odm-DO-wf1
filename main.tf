@@ -20,7 +20,7 @@ terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
     bucket                      = "20220226tfstate"
-    endpoint                    = "nyc3.digitaloceanspaces.com"
+    endpoint                    = "https://nyc3.digitaloceanspaces.com"
     skip_region_validation      = true
     skip_credentials_validation = true
     skip_metadata_api_check     = true
