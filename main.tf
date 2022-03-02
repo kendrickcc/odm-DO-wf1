@@ -18,12 +18,12 @@ provider "digitalocean" {}
 #/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
-    key                        = "terraform.tfstate"
-    bucket                     = "20220226tfstate"
-    endpoint                   = "nyc3.digitaloceanspaces.com"
-    skip_region_validation     = true
-    skip_credential_validation = true
-    region                     = "us-east-1"
+    key                         = "terraform.tfstate"
+    bucket                      = "20220226tfstate"
+    endpoint                    = "nyc3.digitaloceanspaces.com"
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    region                      = "us-east-1"
   }
 }
 #End of comment block */
