@@ -16,7 +16,7 @@ provider "digitalocean" {
 # Comment out this section if testing locally and do not want to use the S3 bucket
 # Remove the leading # to disable the backend
 #-------------------------------
-#/* Begin comment block - only need to remove the leading "#"
+/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
