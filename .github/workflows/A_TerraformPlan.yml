@@ -14,8 +14,8 @@ jobs:
     - name: Terraform init
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID}}
-        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
+        SPACE_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY_ID}}
+        SPACE_SECRET_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
       run: terraform init -input=false
 
     - name: Terraform validation
