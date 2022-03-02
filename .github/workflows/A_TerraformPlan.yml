@@ -12,8 +12,8 @@ jobs:
       run: terraform --version
 
     - name: Terraform init
+        S3_BUCKET="20220226tfstate"
       env:
-        S3_BUCKET: "20220226tfstate"
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       run: terraform init -input=false -backend-config="access_key="${{ secrets.SPACES_ACCESS_KEY_ID}} -backend-config="secret_key="${{ secrets.SPACES_SECRET_ACCESS_KEY}} -backend-config="bucket="$S3_BUCKET
 
