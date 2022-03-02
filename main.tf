@@ -9,8 +9,7 @@ terraform {
     }
   }
 }
-provider "digitalocean" {
-}
+provider "digitalocean" {}
 #-------------------------------
 # S3 Remote State
 # Comment out this section if testing locally and do not want to use the S3 bucket
@@ -21,7 +20,7 @@ terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
     bucket                      = "20220226tfstate"
-    region                      = "nyc3"
+    region                      = "us-east-1"
     endpoint                    = "nyc3.digitaloceanspaces.com"
   }
 }
