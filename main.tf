@@ -21,8 +21,6 @@ terraform {
     key                         = "terraform.tfstate"
     bucket                      = "20220226tfstate"
     endpoint                    = "https://nyc3.digitaloceanspaces.com"
-    access_key                  = "DDJOG5HZCJHGAD7A7Q3S"
-    secret_key                  = "HBuZlt7zq9dzojY1xESs96q4Pj5QQRKvaJGbNS5vFFc"
     skip_region_validation      = true
     skip_credentials_validation = true
     skip_metadata_api_check     = true
