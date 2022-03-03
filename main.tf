@@ -43,7 +43,7 @@ resource "digitalocean_project" "odm" {
 resource "digitalocean_project_resources" "odm" {
   count = length(digitalocean_droplet.odm)
   project   = digitalocean_project.odm.id
-  resources = digitalocean_droplet.odm[count.index].urn
+  resources = [digitalocean_droplet.odm[*].urn]
 }
 resource "digitalocean_droplet" "odm" {
   count  = 2
