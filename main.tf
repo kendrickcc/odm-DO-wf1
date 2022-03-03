@@ -31,27 +31,27 @@ terraform {
 data "digitalocean_ssh_key" "terraform" {
   name = var.pub_key
 }
-
+data "template_file" "user_data" {
+  template = file("odmSetup.yaml")
+}
+resource "digitalocean_droplet" "odm" {
+  count  = 1
+  image  = "ubuntu-18-04-x64"
+  name   = "odm-${count.index}"
+  region = "nyc1"
+  size   = "s-1vcpu-1gb"
+  #user_data = data.template_file.user_data.rendered
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform.id
+  ]
+}
 resource "digitalocean_project" "odm" {
+  count = 1
   name        = "OpenDroneMap"
   description = "OpenDroneMap"
   purpose     = "Web Application"
   environment = "Development"
   resources   = [digitalocean_droplet.odm[count.index].urn]
-}
-data "template_file" "user_data" {
-  template = file("odmSetup.yaml")
-}
-resource "digitalocean_droplet" "odm" {
-  count     = 1
-  image     = "ubuntu-18-04-x64"
-  name      = "odm-${count.index}"
-  region    = "nyc1"
-  size      = "s-1vcpu-1gb"
-  #user_data = data.template_file.user_data.rendered
-  ssh_keys = [
-    data.digitalocean_ssh_key.terraform.id
-  ]
 }
 resource "digitalocean_firewall" "odm" {
   name = "only-22-8000"
