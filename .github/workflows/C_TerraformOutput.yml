@@ -13,15 +13,14 @@ jobs:
 
     - name: Terraform init
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform init -input=false
+        DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+        S3_BUCKET: "20220226tfstate"
+      run: terraform init -input=false -backend-config="access_key=${{ secrets.SPACES_ACCESS_KEY_ID}}" -backend-config="secret_key=${{ secrets.SPACES_SECRET_ACCESS_KEY}}" -backend-config="bucket=$S3_BUCKET"
 
     - name: Terraform validation
       run: terraform validate
 
     - name: Terraform output
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       run: terraform output

@@ -34,8 +34,18 @@ data "digitalocean_ssh_key" "terraform" {
 data "template_file" "user_data" {
   template = file("odmSetup.yaml")
 }
+resource "digitalocean_project" "odm" {
+  name        = "OpenDroneMap"
+  description = "OpenDroneMap"
+  purpose     = "Web Application"
+  environment = "Development"
+}
+resource "digitalocean_project_resources" "odm" {
+  project   = digitalocean_project.odm.id
+  resources = ["digitalocean_droplet.odm[*].urn"]
+}
 resource "digitalocean_droplet" "odm" {
-  count  = 1
+  count  = 2
   image  = "ubuntu-18-04-x64"
   name   = "odm-${count.index}"
   region = "nyc1"
@@ -44,14 +54,6 @@ resource "digitalocean_droplet" "odm" {
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
-}
-resource "digitalocean_project" "odm" {
-  count = 1
-  name        = "OpenDroneMap"
-  description = "OpenDroneMap"
-  purpose     = "Web Application"
-  environment = "Development"
-  resources   = [digitalocean_droplet.odm[count.index].urn]
 }
 resource "digitalocean_firewall" "odm" {
   name = "only-22-8000"
