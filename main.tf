@@ -39,7 +39,6 @@ resource "digitalocean_project" "odm" {
   description = "OpenDroneMap"
   purpose     = "Web Application"
   environment = "Development"
-  resources = [digitalocean_firewall.odm.urn]
 }
 resource "digitalocean_project_resources" "odm" {
   count = length(digitalocean_droplet.odm)
