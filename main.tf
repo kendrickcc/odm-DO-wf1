@@ -37,7 +37,7 @@ resource "digitalocean_project" "odm" {
   description = "OpenDroneMap"
   purpose     = "Web Application"
   environment = "Development"
-  resources   = [digitalocean_droplet.odm.urn]
+  resources   = [digitalocean_droplet.odm.*.urn]
 }
 data "template_file" "user_data" {
   template = file("odmSetup.yaml")
