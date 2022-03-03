@@ -42,7 +42,7 @@ resource "digitalocean_project" "odm" {
 }
 resource "digitalocean_project_resources" "odm" {
   project   = digitalocean_project.odm.id
-  resources = [digitalocean_droplet.odm[count.index]]
+  resources = digitalocean_droplet.odm.*.urn
 }
 resource "digitalocean_droplet" "odm" {
   count  = 2
