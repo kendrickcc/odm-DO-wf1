@@ -31,7 +31,7 @@ terraform {
 data "digitalocean_ssh_key" "terraform" {
   name = var.pub_key
 }
-/*
+
 resource "digitalocean_project" "odm" {
   name        = "OpenDroneMap"
   description = "OpenDroneMap"
@@ -39,7 +39,6 @@ resource "digitalocean_project" "odm" {
   environment = "Development"
   resources   = [digitalocean_droplet.odm.urn]
 }
-*/
 data "template_file" "user_data" {
   template = file("odmSetup.yaml")
 }
@@ -49,31 +48,10 @@ resource "digitalocean_droplet" "odm" {
   name      = "odm-${count.index}"
   region    = "nyc1"
   size      = "s-1vcpu-1gb"
-  user_data = data.template_file.user_data.rendered
+  #user_data = data.template_file.user_data.rendered
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
-
-  /*
-  provisioner "remote-exec" {
-    inline = ["sudo apt-get update", 
-      "sudo apt-get upgrade -y", 
-      "sudo apt-get autoremove -y", 
-      "echo Done!"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "root"
-      private_key = file(var.pvt_key)
-      host        = self.ipv4_address
-    }
-  }
-
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --user root --inventory '${self.ipv4_address}', --private-key ${var.pvt_key} --extra-vars 'pub_key=${var.pub_key_loc}' odm-install.yml"
-  }
-*/
 }
 resource "digitalocean_firewall" "odm" {
   name = "only-22-8000"

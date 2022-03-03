@@ -2,9 +2,6 @@ name: A - Terraform Plan
 
 on: workflow_dispatch
 
-env:
-  S3_BUCKET: "20220226tfstate"
-
 jobs:
   terraform_plan:
     runs-on: ubuntu-latest
@@ -17,6 +14,7 @@ jobs:
     - name: Terraform init
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+        S3_BUCKET: "20220226tfstate"
       run: terraform init -input=false -backend-config="access_key=${{ secrets.SPACES_ACCESS_KEY_ID}}" -backend-config="secret_key=${{ secrets.SPACES_SECRET_ACCESS_KEY}}" -backend-config="bucket=$S3_BUCKET"
 
     - name: Terraform validation
