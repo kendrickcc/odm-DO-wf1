@@ -14,9 +14,8 @@ jobs:
     - name: Terraform init
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID}}
-        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
-      run: terraform init -input=false
+        S3_BUCKET: "20220226tfstate"
+      run: terraform init -input=false -backend-config="access_key=${{ secrets.SPACES_ACCESS_KEY_ID}}" -backend-config="secret_key=${{ secrets.SPACES_SECRET_ACCESS_KEY}}" -backend-config="bucket=$S3_BUCKET"
 
     - name: Terraform validation
       run: terraform validate
@@ -24,13 +23,9 @@ jobs:
     - name: Terraform apply
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID}}
-        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
       run: terraform apply -auto-approve -input=false
 
     - name: Terraform output
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-        SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID}}
-        SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY}}
       run: terraform output
