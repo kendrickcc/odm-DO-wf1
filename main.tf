@@ -40,6 +40,7 @@ resource "digitalocean_project" "odm" {
   purpose     = "Web Application"
   environment = "Development"
 }
+/*
 resource "digitalocean_project_resources" "odm" {
   count = length(digitalocean_droplet.odm)
   project   = digitalocean_project.odm.id
@@ -86,3 +87,4 @@ output "droplet_ip_addresses" {
     droplet.name => droplet.ipv4_address
   }
 }
+*/
