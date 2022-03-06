@@ -12,6 +12,8 @@ terraform {
 provider "digitalocean" {}
 #-------------------------------
 # S3 Remote State
+# This is the same resource used for AWS S3 buckets. The region should be a standard
+# AWS reqion but is not used. Any AWS region should work.
 # Comment out this section if testing locally and do not want to use the S3 bucket
 # Remove the leading # to disable the backend
 #-------------------------------
@@ -19,7 +21,6 @@ provider "digitalocean" {}
 terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
-    bucket                      = "20220226tfstate"
     endpoint                    = "https://nyc3.digitaloceanspaces.com"
     skip_region_validation      = true
     skip_credentials_validation = true
@@ -52,21 +53,34 @@ resource "digitalocean_project" "odm" {
   environment = "Development"
 }
 resource "digitalocean_project_resources" "odm" {
-  project   = digitalocean_project.odm.id
+  project = digitalocean_project.odm.id
   resources = concat(
     digitalocean_droplet.odm.*.urn
-    )
+  )
+}
+#-------------------------------
+# VPC
+#-------------------------------
+resource "digitalocean_vpc" "odm" {
+  # The human friendly name of our VPC.
+  name = "odm-vpc"
+
+  # The region to deploy our VPC to.
+  region = var.region
+
+  # The private ip range within our VPC
+  ip_range = "192.168.10.0/24"
 }
 #-------------------------------
 # Create droplets
 #-------------------------------
 resource "digitalocean_droplet" "odm" {
-  count  = 2
-  image  = "ubuntu-18-04-x64"
-  name   = "odm-${count.index}"
-  region = "nyc3"
-  size   = "s-1vcpu-1gb"
-  #user_data = data.template_file.user_data.rendered
+  count     = var.webodm_count
+  image     = var.webodm_os
+  name      = "${var.prefix_name}-${count.index}"
+  region    = var.region
+  size      = var.webodm_size
+  user_data = data.template_file.user_data.rendered
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
