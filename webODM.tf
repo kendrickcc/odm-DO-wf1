@@ -1,6 +1,7 @@
 #-------------------------------
 # DigitalOcean Provider
 #-------------------------------
+provider "digitalocean" {}
 terraform {
   required_providers {
     digitalocean = {
@@ -8,17 +9,7 @@ terraform {
       version = "~> 2.0"
     }
   }
-}
-provider "digitalocean" {}
-#-------------------------------
-# S3 Remote State
-# This is the same resource used for AWS S3 buckets. The region should be a standard
-# AWS reqion but is not used. Any AWS region should work.
-# Comment out this section if testing locally and do not want to use the S3 bucket
-# Remove the leading # to disable the backend
-#-------------------------------
-#/* Begin comment block - only need to remove the leading "#"
-terraform {
+  #/* Begin comment block - only need to remove the leading "#" if need to test locally
   backend "s3" {
     key                         = "terraform.tfstate"
     endpoint                    = "https://nyc3.digitaloceanspaces.com"
@@ -27,10 +18,8 @@ terraform {
     skip_metadata_api_check     = true
     region                      = "us-east-1"
   }
+  # End of S3 backend comment block */
 }
-#-------------------------------
-# End of S3 Remote State comment block */
-#-------------------------------
 #-------------------------------
 # Get SSH key from DigitalOcean
 #-------------------------------
@@ -62,53 +51,44 @@ resource "digitalocean_project_resources" "odm" {
 # VPC
 #-------------------------------
 resource "digitalocean_vpc" "odm" {
-  # The human friendly name of our VPC.
-  name = "odm-vpc"
-
-  # The region to deploy our VPC to.
-  region = var.region
-
-  # The private ip range within our VPC
-  ip_range = "192.168.10.0/24"
+  name     = "${var.prefix_name}-vpc"
+  region   = var.region
+  ip_range = var.webodm_cidr
 }
 #-------------------------------
-# Create droplets
-#-------------------------------
-resource "digitalocean_droplet" "odm" {
-  count     = var.webodm_count
-  image     = var.webodm_os
-  name      = "${var.prefix_name}-${count.index}"
-  region    = var.region
-  size      = var.webodm_size
-  user_data = data.template_file.user_data.rendered
-  ssh_keys = [
-    data.digitalocean_ssh_key.terraform.id
-  ]
-}
-#-------------------------------
-# Security
+# Firewall
 #-------------------------------
 resource "digitalocean_firewall" "odm" {
-  name = "only-22-8000"
-
+  name        = "ODM_22-8000"
   droplet_ids = digitalocean_droplet.odm.*.id
-
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
     source_addresses = ["0.0.0.0/0"]
   }
-
   inbound_rule {
     protocol         = "tcp"
     port_range       = "8000"
     source_addresses = ["0.0.0.0/0"]
   }
-
   outbound_rule {
     protocol              = "tcp"
     port_range            = "1-65535"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
-
+}
+#-------------------------------
+# Droplets
+#-------------------------------
+resource "digitalocean_droplet" "odm" {
+  count     = var.webodm_count
+  image     = var.webodm_os
+  name      = "${var.prefix_name}-(${count.index}+1)"
+  region    = var.region
+  size      = var.webodm_size
+  vpc_uuid  = digitalocean_vpc.odm.id
+  user_data = data.template_file.user_data.rendered
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform.id
+  ]
 }

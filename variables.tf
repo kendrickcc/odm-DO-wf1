@@ -26,3 +26,6 @@ variable "webodm_size" {
   description = "The server size"
   default     = "s-1vcpu-1gb"
 }
+variable "webodm_cidr" {
+  default = "192.168.10.0/24"
+}
