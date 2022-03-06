@@ -15,7 +15,7 @@ provider "digitalocean" {}
 # Comment out this section if testing locally and do not want to use the S3 bucket
 # Remove the leading # to disable the backend
 #-------------------------------
-/* Begin comment block - only need to remove the leading "#"
+#/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
@@ -27,36 +27,53 @@ terraform {
     region                      = "us-east-1"
   }
 }
-#End of comment block */
+#-------------------------------
+# End of S3 Remote State comment block */
+#-------------------------------
+#-------------------------------
+# Get SSH key from DigitalOcean
+#-------------------------------
 data "digitalocean_ssh_key" "terraform" {
   name = var.pub_key
 }
+#-------------------------------
+# Get cloud-init template file
+#-------------------------------
 data "template_file" "user_data" {
   template = file("odmSetup.yaml")
 }
+#-------------------------------
+# Create new project and add resources
+#-------------------------------
 resource "digitalocean_project" "odm" {
   name        = "OpenDroneMap"
   description = "OpenDroneMap"
   purpose     = "Web Application"
   environment = "Development"
 }
-/*
 resource "digitalocean_project_resources" "odm" {
-  count = length(digitalocean_droplet.odm)
   project   = digitalocean_project.odm.id
-  resources = [digitalocean_droplet.odm[*].urn]
+  resources = concat(
+    digitalocean_droplet.odm.*.urn
+    )
 }
+#-------------------------------
+# Create droplets
+#-------------------------------
 resource "digitalocean_droplet" "odm" {
-  count  = 1
+  count  = 2
   image  = "ubuntu-18-04-x64"
   name   = "odm-${count.index}"
-  region = "nyc1"
+  region = "nyc3"
   size   = "s-1vcpu-1gb"
   #user_data = data.template_file.user_data.rendered
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]
 }
+#-------------------------------
+# Security
+#-------------------------------
 resource "digitalocean_firewall" "odm" {
   name = "only-22-8000"
 
@@ -81,10 +98,3 @@ resource "digitalocean_firewall" "odm" {
   }
 
 }
-output "droplet_ip_addresses" {
-  value = {
-    for droplet in digitalocean_droplet.odm :
-    droplet.name => droplet.ipv4_address
-  }
-}
-*/
