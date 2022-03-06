@@ -26,6 +26,3 @@ variable "webodm_size" {
   description = "The server size"
   default     = "s-1vcpu-1gb"
 }
-variable "s3_endpoint" {}
-variable "s3_bucket" {}
-variable "s3_key" {}
