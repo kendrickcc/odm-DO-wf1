@@ -15,7 +15,7 @@ provider "digitalocean" {}
 # Comment out this section if testing locally and do not want to use the S3 bucket
 # Remove the leading # to disable the backend
 #-------------------------------
-#/* Begin comment block - only need to remove the leading "#"
+/* Begin comment block - only need to remove the leading "#"
 terraform {
   backend "s3" {
     key                         = "terraform.tfstate"
@@ -47,7 +47,7 @@ resource "digitalocean_project_resources" "odm" {
   resources = [digitalocean_droplet.odm[*].urn]
 }
 resource "digitalocean_droplet" "odm" {
-  count  = 2
+  count  = 1
   image  = "ubuntu-18-04-x64"
   name   = "odm-${count.index}"
   region = "nyc1"
