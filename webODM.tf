@@ -62,7 +62,7 @@ resource "digitalocean_vpc" "odm" {
 # Firewall
 #-------------------------------
 resource "digitalocean_firewall" "odm" {
-  name        = "${var.prefix_name}_22-8000"
+  name        = "${var.prefix_name}-22-8000"
   droplet_ids = digitalocean_droplet.odm.*.id
   inbound_rule {
     protocol         = "tcp"
