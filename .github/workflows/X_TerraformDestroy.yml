@@ -21,4 +21,7 @@ jobs:
     - name: Terraform destroy
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-      run: terraform apply -destroy -auto-approve -input=false
+      run: |
+        terraform apply \
+          -destroy -auto-approve -input=false \
+          -var "pub_key_data=${{ secrets.ID_RSA_WEBODM}}"
