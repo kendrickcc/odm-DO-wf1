@@ -62,7 +62,7 @@ resource "digitalocean_vpc" "odm" {
 # Firewall
 #-------------------------------
 resource "digitalocean_firewall" "odm" {
-  name        = "ODM_22-8000"
+  name        = "${var.prefix_name}_22-8000"
   droplet_ids = digitalocean_droplet.odm.*.id
   inbound_rule {
     protocol         = "tcp"
@@ -86,7 +86,7 @@ resource "digitalocean_firewall" "odm" {
 resource "digitalocean_droplet" "odm" {
   count     = var.webodm_count
   image     = var.webodm_os
-  name      = "${var.prefix_name}-${count.index}"
+  name      = "${var.prefix_name}-(${count.index}+1)"
   region    = var.region
   size      = var.webodm_size
   vpc_uuid  = digitalocean_vpc.odm.id
