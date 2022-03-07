@@ -32,7 +32,7 @@ data "digitalocean_ssh_key" "terraform" {
 data "template_file" "user_data" {
   template = file("odmSetup.tpl")
   vars = {
-    ssh_key = var.id_rsa_webodm
+    ssh_key = var.pub_key_data
   }
 }
 #-------------------------------

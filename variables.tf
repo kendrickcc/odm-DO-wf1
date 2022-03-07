@@ -2,15 +2,15 @@ variable "prefix_name" {
   description = "The prefix name to use with resources"
   default     = "odm"
 }
-variable "pvt_key" {
-  default = "~/.ssh/id_rsa_webodm.pem"
-}
 variable "pub_key" {
   default = "id_rsa_webodm"
 }
-variable "pub_key_loc" {
-  default = "~/.ssh/id_rsa_webodm.pub"
+variable "pub_key_data" {
+  description = "The contents of the public key are stored in GitHub as a secret"
 }
+#variable "pub_key_loc" {
+#  default = "~/.ssh/id_rsa_webodm.pub"
+#}
 variable "region" {
   default = "myc3"
 }

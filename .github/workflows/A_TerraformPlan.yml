@@ -27,4 +27,4 @@ jobs:
     - name: Terraform plan
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-      run: terraform plan -var "id_rsa_webodm=${{ secrets.ID_RSA_WEBODM}}"
+      run: terraform plan -var "pub_key_data=${{ secrets.ID_RSA_WEBODM}}"
