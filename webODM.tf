@@ -86,7 +86,7 @@ resource "digitalocean_firewall" "odm" {
 resource "digitalocean_droplet" "odm" {
   count     = var.webodm_count
   image     = var.webodm_os
-  name      = "${var.prefix_name}-(${count.index}+1)"
+  name      = "${var.prefix_name}-${count.index}"
   region    = var.region
   size      = var.webodm_size
   vpc_uuid  = digitalocean_vpc.odm.id
