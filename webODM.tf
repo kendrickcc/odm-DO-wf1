@@ -30,7 +30,10 @@ data "digitalocean_ssh_key" "terraform" {
 # Get cloud-init template file
 #-------------------------------
 data "template_file" "user_data" {
-  template = file("odmSetup.yaml")
+  template = file("odmSetup.tpl")
+  vars = {
+    ssh_key = var.id_rsa_webodm
+  }
 }
 #-------------------------------
 # Create new project and add resources

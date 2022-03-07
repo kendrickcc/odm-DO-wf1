@@ -27,4 +27,4 @@ jobs:
     - name: Terraform plan
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-      run: terraform plan
+      run: terraform plan -var "ssh_key=${{ secrets.ID_RSA_WEBODM}}"
