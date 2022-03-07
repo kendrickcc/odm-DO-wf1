@@ -18,6 +18,7 @@ The intent is to build, process data, download results, then destroy the environ
 	- S3_BUCKET (The Spaces space created)
 	- SPACES_ACCESS_KEY_ID (Spaces access key created under the API menu)
 	- SPACES_SECRET_ACCESS_KEY (Spaces secret key created under the API menu)
+	- ID_RSA_WEBODM (Contents of public SSH key)
 
 ## Configuration
 

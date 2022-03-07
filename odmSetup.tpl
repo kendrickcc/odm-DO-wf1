@@ -19,7 +19,7 @@ users:
   - name: odm
     groups: sudo, docker
     ssh_authorized_keys:
-      - ssh-rsa ${ssh_key}
+      - ${ssh_key}
 
 write_files:
   - path: /etc/systemd/system/webodm.service
