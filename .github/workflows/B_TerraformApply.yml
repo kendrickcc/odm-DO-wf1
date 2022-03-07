@@ -24,7 +24,10 @@ jobs:
     - name: Terraform apply
       env:
         DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-      run: terraform apply -auto-approve -input=false
+      run: |
+        terraform apply \
+          -auto-approve -input=false \
+          -var "pub_key_data=${{ secrets.ID_RSA_WEBODM}}"
 
     - name: Terraform output
       env:

@@ -8,9 +8,6 @@ variable "pub_key" {
 variable "pub_key_data" {
   description = "The contents of the public key are stored in GitHub as a secret"
 }
-#variable "pub_key_loc" {
-#  default = "~/.ssh/id_rsa_webodm.pub"
-#}
 variable "region" {
   default = "myc3"
 }
