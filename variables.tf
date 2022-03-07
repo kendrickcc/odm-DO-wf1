@@ -9,7 +9,7 @@ variable "pub_key_data" {
   description = "The contents of the public key are stored in GitHub as a secret"
 }
 variable "region" {
-  default = "myc3"
+  default = "nyc3"
 }
 variable "webodm_cidr" {
   default = "192.168.10.0/24"
