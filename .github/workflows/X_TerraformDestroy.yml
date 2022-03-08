@@ -3,14 +3,19 @@ name: X - Terraform Destroy
 on: workflow_dispatch
 
 jobs:
-  terraform_destroy:
+  terraform:
+    name: "Terraform destroy"
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
 
     - name: Terraform init
-      env:
-        DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       run: |
         terraform init \
           -input=false \
@@ -19,8 +24,6 @@ jobs:
           -backend-config="bucket=${{ secrets.S3_BUCKET}}"
 
     - name: Terraform destroy
-      env:
-        DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       run: |
         terraform apply \
           -destroy -auto-approve -input=false \
