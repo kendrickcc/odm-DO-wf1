@@ -45,6 +45,17 @@ Once the secrets are entered, and the variables modified, then Actions may be us
 
 - X - Terraform Destroy: Will remove all resources associate with this build.
 
+## OpenDroneMap
+
+After 5 minutes, WebODM, ClusterODM and nodeODM nodes should be ready to acesss. Open the `B - Terraform Apply` action, and select `Terraform Apply` until you see `Terraform Output`. Expand this section and you should see IP addresses for the nodes. A public IP address for WebODM, then private IP addresses for ClusterODM and any nodes. 
+
+- [public ip]:8000 WebODM
+- [public ip]:8001 ClusterODM (Yes, this is changed from the default port of 10000)
+
+Open a browser to the ClusterODM port and add in the nodes using the private IP address. Use port 3001 for the node that is on the WebODM/ClusterODM server, then port 3000 for the other nodes.
+
+Then open port 8000 to access the WebODM portal, and add the ClusterODM using the private IP address and port 8080.
+
 ## Troubleshooting
 
 Sometimes the `terraform.tfstate` file that is stored in Spaces can get out of sync. For example, the Destroy action is not used to remove resources as they were removed in the DigitalOcean interface. The state file will still have a record of the resource. Just delete the `terraform.tfstate` file under the Spaces space. 
