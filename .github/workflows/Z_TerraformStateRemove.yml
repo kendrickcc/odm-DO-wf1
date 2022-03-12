@@ -17,8 +17,8 @@ jobs:
       uses: actions/checkout@v3
     - name: S3cmd actions
       uses: mltframework/s3cmd-action@main
-        with:
-          args: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      with:
+        args: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: S3 remove bucket file
       run: s3cmd rm s3://20220226tfstate/terraform.tfstate
