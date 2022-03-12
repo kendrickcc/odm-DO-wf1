@@ -29,8 +29,14 @@ data "digitalocean_ssh_key" "terraform" {
 #-------------------------------
 # Get cloud-init template file
 #-------------------------------
-data "template_file" "user_data" {
-  template = file("odmSetup.tpl")
+data "template_file" "webodm" {
+  template = file("webodm.tpl")
+  vars = {
+    ssh_key = var.pub_key_data
+  }
+}
+data "template_file" "nodeodm" {
+  template = file("nodeodm.tpl")
   vars = {
     ssh_key = var.pub_key_data
   }
@@ -74,6 +80,11 @@ resource "digitalocean_firewall" "odm" {
     port_range       = "8000"
     source_addresses = ["0.0.0.0/0"]
   }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "8001"
+    source_addresses = ["0.0.0.0/0"]
+  }
   outbound_rule {
     protocol              = "tcp"
     port_range            = "1-65535"
@@ -83,14 +94,25 @@ resource "digitalocean_firewall" "odm" {
 #-------------------------------
 # Droplets
 #-------------------------------
-resource "digitalocean_droplet" "odm" {
-  count     = var.webodm_count
+resource "digitalocean_droplet" "webodm" {
   image     = var.webodm_os
-  name      = "${var.prefix_name}-${count.index}"
+  name      = "${var.prefix_name}-webodm"
   region    = var.region
   size      = var.webodm_size
   vpc_uuid  = digitalocean_vpc.odm.id
-  user_data = data.template_file.user_data.rendered
+  user_data = data.template_file.webodm.rendered
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform.id
+  ]
+}
+resource "digitalocean_droplet" "nodeodm" {
+  count     = var.nodeodm_count
+  image     = var.nodeodm_os
+  name      = "${var.prefix_name}-${count.index}"
+  region    = var.region
+  size      = var.nodeodm_size
+  vpc_uuid  = digitalocean_vpc.odm.id
+  user_data = data.template_file.nodeodm.rendered
   ssh_keys = [
     data.digitalocean_ssh_key.terraform.id
   ]

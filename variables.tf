@@ -12,9 +12,9 @@ variable "region" {
   default = "nyc3"
 }
 variable "webodm_cidr" {
-  default = "192.168.10.0/24"
+  default = "192.168.1.0/24"
 }
-variable "webodm_count" {
+variable "nodeodm_count" {
   description = "Number of WebODM consoles"
   default     = 1
 }
@@ -23,6 +23,14 @@ variable "webodm_os" {
   default     = "ubuntu-18-04-x64"
 }
 variable "webodm_size" {
+  description = "The server size"
+  default     = "s-4vcpu-8gb"
+}
+variable "nodeodm_os" {
+  description = "Image OS for the nodeODM droplet"
+  default     = "ubuntu-18-04-x64"
+}
+variable "nodeodm_size" {
   description = "The server size"
   default     = "s-4vcpu-8gb"
 }

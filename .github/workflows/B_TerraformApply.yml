@@ -5,32 +5,45 @@ on: workflow_dispatch
 jobs:
   terraform:
     name: "Terraform apply"
-    env:
-      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: DigitalOcean doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Terraform init
+      id: init
       run: |
         terraform init \
-          -input=false \
+          -input=false -no-color \
           -backend-config="access_key=${{ secrets.SPACES_ACCESS_KEY_ID}}" \
           -backend-config="secret_key=${{ secrets.SPACES_SECRET_ACCESS_KEY}}" \
           -backend-config="bucket=${{ secrets.S3_BUCKET}}"
 
     - name: Terraform validation
-      run: terraform validate
+      id: validate
+      run: |
+        terraform validate \
+          -no-color
 
     - name: Terraform apply
+      id: apply
       run: |
         terraform apply \
-          -auto-approve -input=false \
+          -auto-approve -input=false -no-color \
           -var "pub_key_data=${{ secrets.ID_RSA_WEBODM}}"
 
     - name: Terraform output
-      run: terraform output
+      id: output
+      run: |
+        terraform output \
+          -no-color
