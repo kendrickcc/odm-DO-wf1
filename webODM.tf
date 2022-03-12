@@ -54,7 +54,7 @@ resource "digitalocean_project_resources" "odm" {
   project = digitalocean_project.odm.id
   resources = concat(
     digitalocean_droplet.webodm.urn,
-    digitalocean_droplet.nodeodm.*.urn
+    digitalocean_droplet.nodeodm.*.urn,
   )
 }
 #-------------------------------
