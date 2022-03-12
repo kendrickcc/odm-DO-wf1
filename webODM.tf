@@ -53,7 +53,8 @@ resource "digitalocean_project" "odm" {
 resource "digitalocean_project_resources" "odm" {
   project = digitalocean_project.odm.id
   resources = concat(
-    digitalocean_droplet.odm.*.urn
+    digitalocean_droplet.webodm.urn,
+    digitalocean_droplet.nodeodm.*.urn
   )
 }
 #-------------------------------
@@ -69,7 +70,10 @@ resource "digitalocean_vpc" "odm" {
 #-------------------------------
 resource "digitalocean_firewall" "odm" {
   name        = "${var.prefix_name}-22-8000"
-  droplet_ids = digitalocean_droplet.odm.*.id
+  droplet_ids = [
+    digitalocean_droplet.webodm.id,
+    digitalocean_droplet.nodeodm.*.id
+    ]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
