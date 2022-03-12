@@ -1,6 +1,9 @@
-output "droplet_ip_addresses" {
-  value = {
-    for droplet in digitalocean_droplet.odm :
-    droplet.name => droplet.ipv4_address
-  }
+output "ClusterODM_internal_ip" {
+  value = droplet.webodm.private_ip
+}
+output "NodeODM_internal_ip" {
+  value = droplet.nodeodm.*.public_ip
+}
+output "WebODM" {
+  value = droplet.webodm.public_ip
 }
