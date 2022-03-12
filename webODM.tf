@@ -70,7 +70,10 @@ resource "digitalocean_vpc" "odm" {
 #-------------------------------
 resource "digitalocean_firewall" "odm" {
   name        = "${var.prefix_name}-22-8000"
-  droplet_ids = [digitalocean_droplet.webodm.*.id, digitalocean_droplet.nodeodm.*.id]
+  droplet_ids = [
+    "${digitalocean_droplet.webodm.*.id}", 
+    "${digitalocean_droplet.nodeodm.*.id}"
+    ]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
