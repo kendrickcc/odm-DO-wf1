@@ -3,6 +3,7 @@ variable "prefix_name" {
   default     = "odm"
 }
 variable "pub_key" {
+  description = "The SSH key name stored in DigitalOcean"
   default = "id_rsa_webodm"
 }
 variable "pub_key_data" {
