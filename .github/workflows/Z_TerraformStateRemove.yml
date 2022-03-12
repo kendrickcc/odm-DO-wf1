@@ -15,12 +15,10 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-    - name: DigitalOcean doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: S3cmd actions
+      uses: mltframework/s3cmd-action@main
+        with:
+          args: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: S3 remove bucket file
       run: s3cmd rm s3://20220226tfstate/terraform.tfstate
