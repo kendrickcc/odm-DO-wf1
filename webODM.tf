@@ -53,7 +53,7 @@ resource "digitalocean_project" "odm" {
 resource "digitalocean_project_resources" "odm" {
   project = digitalocean_project.odm.id
   resources = concat(
-    digitalocean_droplet.webodm.urn,
+    digitalocean_droplet.webodm.*.urn,
     digitalocean_droplet.nodeodm.*.urn,
   )
 }
@@ -71,8 +71,8 @@ resource "digitalocean_vpc" "odm" {
 resource "digitalocean_firewall" "odm" {
   name        = "${var.prefix_name}-22-8000"
   droplet_ids = [
-    digitalocean_droplet.webodm.id,
-    digitalocean_droplet.nodeodm.*.id
+    digitalocean_droplet.webodm.*.id,
+    digitalocean_droplet.nodeodm.*.id,
     ]
   inbound_rule {
     protocol         = "tcp"
@@ -99,8 +99,9 @@ resource "digitalocean_firewall" "odm" {
 # Droplets
 #-------------------------------
 resource "digitalocean_droplet" "webodm" {
+  count     = var.webodm_count
   image     = var.webodm_os
-  name      = "${var.prefix_name}-webodm"
+  name      = "${var.prefix_name}-webodm-${count.index}"
   region    = var.region
   size      = var.webodm_size
   vpc_uuid  = digitalocean_vpc.odm.id
@@ -112,7 +113,7 @@ resource "digitalocean_droplet" "webodm" {
 resource "digitalocean_droplet" "nodeodm" {
   count     = var.nodeodm_count
   image     = var.nodeodm_os
-  name      = "${var.prefix_name}-${count.index}"
+  name      = "${var.prefix_name}-node-${count.index}"
   region    = var.region
   size      = var.nodeodm_size
   vpc_uuid  = digitalocean_vpc.odm.id

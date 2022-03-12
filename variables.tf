@@ -16,6 +16,10 @@ variable "webodm_cidr" {
   default = "192.168.1.0/24"
 }
 variable "nodeodm_count" {
+  description = "Number of nodeODM nodes"
+  default     = 1
+}
+variable "webodm_count" {
   description = "Number of WebODM consoles"
   default     = 1
 }
