@@ -74,10 +74,16 @@ resource "digitalocean_firewall" "odm" {
     digitalocean_droplet.webodm.*.id, 
     digitalocean_droplet.nodeodm.*.id,
     )
+  /* Add "#" to the beginning of this line to enable port 22 access 
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
     source_addresses = ["0.0.0.0/0"]
+  } # */
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "3000"
+    source_addresses = ["${var.webodm_cidr}"]
   }
   inbound_rule {
     protocol         = "tcp"
