@@ -45,6 +45,8 @@ Once the secrets are entered, and the variables modified, then Actions may be us
 
 - X - Terraform Destroy: Will remove all resources associate with this build.
 
+***Note***: The `destroy` workflow has a cron entry to destroy everynight at midnight. This is prevent resources from being provisioned for long periods of time. Maybe forgetting to destroy after a job, or could not access consoles, etc.. Simply a measure to keep costs down.
+
 ## OpenDroneMap
 
 After 5 minutes, WebODM, ClusterODM and nodeODM nodes should be ready to acesss. Open the `B - Terraform Apply` action, and select `Terraform Apply` until you see `Terraform Output`. Expand this section and you should see IP addresses for the nodes. A public IP address for WebODM, then private IP addresses for ClusterODM and any nodes. 
