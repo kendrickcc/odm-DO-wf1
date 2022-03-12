@@ -5,6 +5,8 @@ on: workflow_dispatch
 jobs:
   terraform:
     name: "Terraform apply"
+    env: 
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
     runs-on: ubuntu-latest
     defaults:
       run:
